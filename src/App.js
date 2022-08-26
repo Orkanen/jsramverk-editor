@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <ReactQuill theme="snow" value={value} onChange={setValue} />
-      <button onClick={() => console.log(value)}>Save</button>
+      <button onClick={() => console.log(value)}>console</button>
     </div>
   );
 }
