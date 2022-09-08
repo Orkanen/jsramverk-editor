@@ -9,13 +9,28 @@ const editorModel = {
         //console.log(lists);
         return lists;
     },
-    saveList: async function saveList(newDoc) {
-        const response = await fetch(`${editorModel.baseUrl}/list/add`, {
-            body: JSON.stringify(newDoc),
+    saveList: async function saveList(idEdit, textEdit) {
+        console.log(idEdit, textEdit);
+        
+        const response = await fetch(`${editorModel.baseUrl}/list/create`, {
+            body: JSON.stringify({text: textEdit}),
             headers: {
                 'content-type': 'application/json'
             },
             method: 'POST'
+        });
+
+        const result = await response.json();
+
+        console.log(result);
+    },
+    updateList: async function updateList(idEdit, textEdit, titleEdit) {
+        const response = await fetch(`${editorModel.baseUrl}/list/update`, {
+            body: JSON.stringify({id: idEdit, text: textEdit, title: titleEdit}),
+            headers: {
+                'content-type': 'application/json'
+            },
+            method: 'PATCH'
         });
 
         const result = await response.json();

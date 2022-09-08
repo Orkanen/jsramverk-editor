@@ -10,16 +10,30 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-export default function Editor(props) {
+export default function Editor() {
   const [items, setItems] = useState([{name:'loading..'}]);
   const [title, setTitle] = useState('loading..');
   const [value, setValue] = useState('loading..');
 
   async function fetchList() {
     const docs = await editorModel.getList();
-    setValue(docs[0].name);
+    setValue(docs[0].docText);
     setTitle(docs[0]._id);
     setItems(docs);
+  }
+
+  async function saveList(text, title) {
+    //console.log(text, title);
+    await editorModel.saveList(title, text);
+
+    fetchList();
+  }
+
+  async function updateList(text, title) {
+    //console.log(text, title);
+    await editorModel.updateList(title, text);
+
+    fetchList();
   }
 
   function List(props) {
@@ -28,7 +42,7 @@ export default function Editor(props) {
       <DropdownButton id="dropdown-basic-button" title="Dropdown button">
         <Dropdown.Menu>
           {props.data.map((post,i) =>
-            <Dropdown.Item key={i} onClick={() => fetchItem({i})}>{post._id}, {post.name}</Dropdown.Item>
+            <Dropdown.Item key={i} onClick={() => fetchItem({i})}>{post._id}, {post.docTitle}</Dropdown.Item>
           )}
         </Dropdown.Menu>
       </DropdownButton>
@@ -39,7 +53,7 @@ export default function Editor(props) {
   }
 
   function fetchItem(number) {
-    setValue(items[{number}.number.i].name);
+    setValue(items[{number}.number.i].docText);
     setTitle(items[{number}.number.i]._id);
   }
 
@@ -60,8 +74,8 @@ export default function Editor(props) {
           <List data={items}/>
         </Col>
         <Col sm={8}>
-          <Button style={{float: 'right'}} variant="secondary" onClick={() => console.log(value, title)}>Update</Button>{' '}
-          <Button style={{float: 'right'}} variant="success" onClick={() => console.log(value)}>Create</Button>{' '}
+          <Button style={{float: 'right'}} variant="secondary" onClick={() => updateList(value, title)}>Update</Button>{' '}
+          <Button style={{float: 'right'}} variant="success" onClick={() => saveList(value, title)}>Create</Button>{' '}
         </Col>
       </Row>
     </Container>
