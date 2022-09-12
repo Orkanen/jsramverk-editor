@@ -10,7 +10,7 @@ const editorModel = {
         return lists;
     },
     saveList: async function saveList(idEdit, textEdit) {
-        console.log(idEdit, textEdit);
+        //console.log(idEdit, textEdit);
         
         const response = await fetch(`${editorModel.baseUrl}/list/create`, {
             body: JSON.stringify({text: textEdit}),
