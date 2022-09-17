@@ -32,7 +32,7 @@ export default function Editor({lists, submitFunction}) {
             <DropdownButton id="dropdown-basic-button" title="Documents">
                 <Dropdown.Menu>
                     {props.data?.map((post, i) =>
-                        <Dropdown.Item id="dropdown-button-testing" key={i} onClick={() => fetchItem({i})}>{post._id},
+                        <Dropdown.Item key={i} onClick={() => fetchItem({i})}>{post._id},
                             {post.docTitle}</Dropdown.Item>
                     )}
                 </Dropdown.Menu>
