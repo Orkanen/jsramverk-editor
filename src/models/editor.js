@@ -6,12 +6,13 @@ const editorModel = {
         const response = await fetch(`${editorModel.baseUrl}/list`);
         //console.log(response);
         const lists = await response.json();
+
         //console.log(lists.data);
         return lists.data;
     },
     saveList: async function saveList(idEdit, textEdit) {
         //console.log(idEdit, textEdit);
-        
+
         const response = await fetch(`${editorModel.baseUrl}/list/create`, {
             body: JSON.stringify({text: textEdit}),
             headers: {
