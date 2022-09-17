@@ -15,8 +15,6 @@ export default function Editor({lists, submitFunction}) {
     const [value, setValue] = useState('');
     const items = lists;
 
-    console.log(lists);
-
     async function saveList(text, title) {
         await editorModel.saveList(title, text);
 
@@ -33,8 +31,8 @@ export default function Editor({lists, submitFunction}) {
         const sidebar = (
             <DropdownButton id="dropdown-basic-button" title="Documents">
                 <Dropdown.Menu>
-                    {props.data.map((post, i) =>
-                        <Dropdown.Item key={i} onClick={() => fetchItem({i})}>{post._id},
+                    {props.data?.map((post, i) =>
+                        <Dropdown.Item id="dropdown-button-testing" key={i} onClick={() => fetchItem({i})}>{post._id},
                             {post.docTitle}</Dropdown.Item>
                     )}
                 </Dropdown.Menu>
@@ -56,10 +54,10 @@ export default function Editor({lists, submitFunction}) {
             <h3>
                 {title}
             </h3>
-            <ReactQuill theme="snow" value={value} onChange={setValue} />
+            <ReactQuill id="quillEditor" theme="snow" value={value} onChange={setValue} />
             <Row>
                 <Col sm={4}>
-                    <List data={items}/>
+                    <List data={lists}/>
                 </Col>
                 <Col sm={8}>
                     <Button style={{float: 'right'}} variant="secondary"
