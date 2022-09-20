@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from 'react';
-//import ReactQuill from 'react-quill';
-//import 'react-quill/dist/quill.snow.css';
 import Editor from './components/editor.js';
+import SocketEditor from './components/socket.js';
 import editorModel from './models/editor';
+import { io } from "socket.io-client";
+
+const base = io();
 
 export default function App() {
     const [list, setList] = useState([]);
+    const [socket, setSocket] = useState(base);
+
+    //use http://localhost:1337 when local
+
+    useEffect(() => {
+        setSocket(io('https://jsramverk-editor-fian12.azurewebsites.net'));
+
+        return () => {
+            if (socket) {
+                socket.disconnect();
+            }
+        };
+    }, []);
 
     async function fetchList() {
         const docs = await editorModel.getList();
@@ -19,9 +34,11 @@ export default function App() {
         })();
     }, []);
 
-
     return (
-        < Editor lists={list} submitFunction={fetchList} />
+        < div>
+            < Editor lists={list} submitFunction={fetchList} />
+            < SocketEditor socket={socket} />
+        </div>
     );
 }
 
