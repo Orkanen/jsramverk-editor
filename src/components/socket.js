@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import SocketList from './listSockets.js';
+import "../css/listchat.css";
 
 export default function SocketEditor({socket}) {
     const [message, setMessage] = useState('');
@@ -28,7 +29,7 @@ export default function SocketEditor({socket}) {
         //console.log(message);
         if (message!=='') {
             socket.emit('chat message', message, name);
-            myMessage = {name: "Me", msg: message};
+            myMessage = {name: "Me", msg: message, code: "primary"};
             setUsers(users => [...users, myMessage]);
             //Problematic code. Array keeps adding. Yikes.
         }
@@ -46,7 +47,7 @@ export default function SocketEditor({socket}) {
     }, [socket]);
 
     return (
-        <Container>
+        <Container className="chat-container">
             <SocketList users={users}/>
             <Form>
                 <Form.Group className="mb-3">
