@@ -31,7 +31,6 @@ export default function SocketEditor({socket}) {
             socket.emit('chat message', message, name);
             myMessage = {name: "Me", msg: message, code: "primary"};
             setUsers(users => [...users, myMessage]);
-            //Problematic code. Array keeps adding. Yikes.
         }
         setMessage('');
     }
@@ -41,7 +40,6 @@ export default function SocketEditor({socket}) {
             socket.on("chat message", function (data) {
                 console.log(data);
                 setUsers(users => [...users, data]);
-                //Problematic code. Array keeps adding. Yikes.
             });
         }
     }, [socket]);

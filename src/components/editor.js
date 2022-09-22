@@ -49,6 +49,27 @@ export default function Editor({lists, submitFunction}) {
         setTitle(items[{number}.number.i]._id);
     }
 
+    /*
+    //-----------------SOMETHING LIKE THIS?-------------------------//
+        function emitDocument() {
+            onChange =>
+            function socket.sendMessage(e) {
+                e.preventDefault
+                socket.emit({title}, {e.value})
+            }
+
+            useEffect(() => {
+                if (socket) {
+                    socket.on({title}, function (data) {
+                        console.log(data);
+                        setUsers(users => [...users, data]);
+                    });
+                }
+            }, [socket]);
+        }
+    //------------------------------------------------------------//
+    */
+
     return (
         <Container>
             <h3>
