@@ -11,6 +11,7 @@ export default function App() {
     const [socket, setSocket] = useState(base);
 
     //use http://localhost:1337 when local
+    //https://jsramverk-editor-fian12.azurewebsites.net
 
     useEffect(() => {
         setSocket(io('https://jsramverk-editor-fian12.azurewebsites.net'));
@@ -36,7 +37,7 @@ export default function App() {
 
     return (
         < div>
-            < Editor lists={list} submitFunction={fetchList} />
+            < Editor lists={list} submitFunction={fetchList} socket={socket} />
             < SocketEditor socket={socket} />
         </div>
     );

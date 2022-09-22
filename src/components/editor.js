@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import editorModel from '../models/editor';
@@ -10,7 +10,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-export default function Editor({lists, submitFunction}) {
+export default function Editor({lists, submitFunction, socket}) {
     const [title, setTitle] = useState('');
     const [value, setValue] = useState('');
     const items = lists;
@@ -32,7 +32,9 @@ export default function Editor({lists, submitFunction}) {
             <DropdownButton id="dropdown-basic-button" title="Documents">
                 <Dropdown.Menu>
                     {props.data?.map((post, i) =>
-                        <Dropdown.Item key={i} onClick={() => fetchItem({i})}>{post._id},
+                        <Dropdown.Item key={i}
+                            onClick={() => (joinRoom(post._id),
+                            fetchItem({i}))}>{post._id},
                             {post.docTitle}</Dropdown.Item>
                     )}
                 </Dropdown.Menu>
@@ -44,38 +46,52 @@ export default function Editor({lists, submitFunction}) {
         );
     }
 
-    function fetchItem(number) {
+    async function fetchItem(number) {
         setValue(items[{number}.number.i].docText);
         setTitle(items[{number}.number.i]._id);
     }
 
-    /*
-    //-----------------SOMETHING LIKE THIS?-------------------------//
-        function emitDocument() {
-            onChange =>
-            function socket.sendMessage(e) {
-                e.preventDefault
-                socket.emit({title}, {e.value})
-            }
+    function onChangeEffect(e) {
+        let dataEmit = {
+            _id: {title},
+            html: e
+        };
 
-            useEffect(() => {
-                if (socket) {
-                    socket.on({title}, function (data) {
-                        console.log(data);
-                        setUsers(users => [...users, data]);
-                    });
-                }
-            }, [socket]);
+        //TITLE DOES NOT UPDATE FAST ENOUGH!
+        console.log({title});
+
+        if (socket) {
+            socket.emit("document", dataEmit);
         }
-    //------------------------------------------------------------//
-    */
+
+        setValue(e);
+    }
+
+    useEffect(() => {
+        socket.on("document", (data) => {
+            console.log(data["_id"].title);
+            console.log({title}.title);
+            if ({title}.title == data["_id"].title) {
+                setValue(data["html"]);
+            } else {
+                console.log("wrong room");
+            }
+        });
+    }, [title]);
+
+    function joinRoom(e) {
+        console.log(e);
+
+        socket.emit("editor", e);
+    }
 
     return (
         <Container>
             <h3>
                 {title}
             </h3>
-            <ReactQuill id="quillEditor" theme="snow" value={value} onChange={setValue} />
+            <ReactQuill id="quillEditor" theme="snow"
+                value={value} onChange={onChangeEffect} />
             <Row>
                 <Col sm={4}>
                     <List data={lists}/>
