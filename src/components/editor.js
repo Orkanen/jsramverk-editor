@@ -13,6 +13,7 @@ import Col from 'react-bootstrap/Col';
 export default function Editor({lists, submitFunction, socket}) {
     const [title, setTitle] = useState('');
     const [value, setValue] = useState('');
+    const [room, setRoom] = useState('');
     const items = lists;
 
     async function saveList(text, title) {
@@ -77,9 +78,10 @@ export default function Editor({lists, submitFunction, socket}) {
 
     function joinRoom(e) {
         //console.log(e);
-
+        socket.emit("leave", room);
         if (socket) {
             socket.emit("editor", e);
+            setRoom(e);
         } else {
             console.log("socket error");
         }
