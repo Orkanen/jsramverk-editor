@@ -47,30 +47,26 @@ export default function Editor({lists, submitFunction, socket}) {
     }
 
     async function fetchItem(number) {
-        setValue(items[{number}.number.i].docText);
         setTitle(items[{number}.number.i]._id);
+        setValue(items[{number}.number.i].docText);
     }
 
     function onChangeEffect(e) {
+        //console.log({title}.title);
         let dataEmit = {
             _id: {title},
             html: e
         };
 
-        //TITLE DOES NOT UPDATE FAST ENOUGH!
-        console.log({title});
-
         if (socket) {
             socket.emit("document", dataEmit);
         }
-
         setValue(e);
     }
 
     useEffect(() => {
         socket.on("document", (data) => {
-            console.log(data["_id"].title);
-            console.log({title}.title);
+            //console.log(data["_id"].title);
             if ({title}.title == data["_id"].title) {
                 setValue(data["html"]);
             } else {
@@ -80,9 +76,13 @@ export default function Editor({lists, submitFunction, socket}) {
     }, [title]);
 
     function joinRoom(e) {
-        console.log(e);
+        //console.log(e);
 
-        socket.emit("editor", e);
+        if (socket) {
+            socket.emit("editor", e);
+        } else {
+            console.log("socket error");
+        }
     }
 
     return (
@@ -91,7 +91,7 @@ export default function Editor({lists, submitFunction, socket}) {
                 {title}
             </h3>
             <ReactQuill id="quillEditor" theme="snow"
-                value={value} onChange={onChangeEffect} />
+                value={value} onChange={(e) => onChangeEffect(e)} />
             <Row>
                 <Col sm={4}>
                     <List data={lists}/>
