@@ -53,24 +53,30 @@ export default function Editor({lists, submitFunction, socket}) {
     }
 
     function onChangeEffect(e) {
+        //console.log(e);
         let dataEmit = {
             _id: {title},
             html: e
         };
 
+        //console.log(dataEmit);
         if (socket) {
             socket.emit("document", dataEmit);
         }
         setValue(e);
     }
 
+    /*console.log({title}.title);
+    if ({title}.title == data["_id"].title) {
+    console.log(data["html"]);
+    setValue(data["html"]);
+    } else {
+    console.log({title}.title+ " vs. " +data["_id"].title);
+    }*/
+
     useEffect(() => {
         socket.on("document", (data) => {
-            if ({title}.title == data["_id"].title) {
-                setValue(data["html"]);
-            } else {
-                console.log("wrong room");
-            }
+            setValue(data["html"]);
         });
     }, [title]);
 
@@ -90,7 +96,9 @@ export default function Editor({lists, submitFunction, socket}) {
                 {title}
             </h3>
             <ReactQuill id="quillEditor" theme="snow"
-                value={value} onChange={(e) => onChangeEffect(e)} />
+                value={value} onChange={(e) => onChangeEffect(e)}
+                style={{ whiteSpace: 'pre-wrap' }}
+            />
             <Row>
                 <Col sm={4}>
                     <List data={lists}/>
