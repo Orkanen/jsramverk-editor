@@ -2,12 +2,15 @@ const editorModel = {
     baseUrl: window.location.href.includes("localhost") ?
         "http://localhost:1337" :
         "https://jsramverk-editor-fian12.azurewebsites.net",
-    getList: async function getList() {
-        const response = await fetch(`${editorModel.baseUrl}/list`);
-        //console.log(response);
+    getList: async function getList(token) {
+        const response = await fetch(`${editorModel.baseUrl}/list`, {
+            headers: {
+                "x-access-token": token,
+            }
+        });
+
         const lists = await response.json();
 
-        //console.log(lists.data);
         return lists.data;
     },
     saveList: async function saveList(idEdit, textEdit) {
