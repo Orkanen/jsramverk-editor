@@ -28,6 +28,6 @@
 
 .chat-list {
     overflow: overlay;
-    height: 30em;
+    height: 20em;
     position: relative;
 }

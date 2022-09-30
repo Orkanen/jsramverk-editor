@@ -11,6 +11,7 @@ export default function App() {
     const [list, setList] = useState([]);
     const [socket, setSocket] = useState(base);
     const [token, setToken] = useState("");
+    const [userEmail, setUserEmail] = useState("");
 
     //use http://localhost:1337 when local
     //https://jsramverk-editor-fian12.azurewebsites.net
@@ -26,9 +27,11 @@ export default function App() {
     }, []);
 
     async function fetchList() {
-        const docs = await editorModel.getList(token);
+        //const docs = await editorModel.getList(token);
+        const docs = await editorModel.getUserLists(token, userEmail);
 
         setList(docs);
+        //console.log(email);
     }
 
     useEffect(() => {
@@ -41,11 +44,12 @@ export default function App() {
         < div>
             {token ?
                 <>
-                    < Editor lists={list} submitFunction={fetchList} socket={socket} />
+                    < Editor lists={list} submitFunction={fetchList} socket={socket}
+                        email={userEmail} />
                     < SocketEditor socket={socket} />
                 </>
                 :
-                <Login setToken={setToken} />
+                <Login setToken={setToken} setUserEmail={setUserEmail} />
             }
         </div>
     );

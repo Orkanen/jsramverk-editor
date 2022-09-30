@@ -9,15 +9,18 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
-export default function Editor({lists, submitFunction, socket}) {
+export default function Editor({lists, submitFunction, socket, email}) {
     const [title, setTitle] = useState('');
     const [value, setValue] = useState('');
     const [room, setRoom] = useState('');
+    const [newUser, setNewUser] = useState('');
     const items = lists;
 
-    async function saveList(text, title) {
-        await editorModel.saveList(title, text);
+    async function saveList(text, title, email) {
+        await editorModel.saveList(title, text, email);
 
         submitFunction();
     }
@@ -66,14 +69,6 @@ export default function Editor({lists, submitFunction, socket}) {
         setValue(e);
     }
 
-    /*console.log({title}.title);
-    if ({title}.title == data["_id"].title) {
-    console.log(data["html"]);
-    setValue(data["html"]);
-    } else {
-    console.log({title}.title+ " vs. " +data["_id"].title);
-    }*/
-
     useEffect(() => {
         socket.on("document", (data) => {
             setValue(data["html"]);
@@ -90,9 +85,20 @@ export default function Editor({lists, submitFunction, socket}) {
         }
     }
 
+    async function addUser(id, value) {
+        if (value && id) {
+            console.log(id, " + ", value);
+            await editorModel.addOwner(id, value);
+
+            submitFunction();
+        }
+    }
+
     return (
         <Container>
             <h3>
+                {email}
+                <br/>
                 {title}
             </h3>
             <ReactQuill id="quillEditor" theme="snow"
@@ -107,9 +113,20 @@ export default function Editor({lists, submitFunction, socket}) {
                     <Button style={{float: 'right'}} variant="secondary"
                         onClick={() => updateList(value, title)}>Update</Button>{' '}
                     <Button style={{float: 'right'}} variant="success"
-                        onClick={() => saveList(value, title)}>Create</Button>{' '}
+                        onClick={() => saveList(value, title, email)}>Create</Button>{' '}
                 </Col>
             </Row>
+            <InputGroup className="mb-3">
+                <Form.Control
+                    placeholder="Recipient's username"
+                    aria-label="Recipient's username"
+                    aria-describedby="basic-addon2"
+                    onChange={(e) => setNewUser(e.target.value)}
+                />
+                <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
+            </InputGroup>
+            <Button style={{float: 'right'}} variant="info"
+                onClick={() => addUser(title, newUser)}>Add User</Button>{' '}
         </Container>
     );
 }
