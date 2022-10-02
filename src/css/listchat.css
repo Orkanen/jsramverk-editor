@@ -31,3 +31,13 @@
     height: 20em;
     position: relative;
 }
+
+.button-margin {
+    margin-right: 1em;
+}
+
+.form-border {
+    border: solid #ccc 1px;
+    padding: 1em;
+}
+

@@ -37,7 +37,7 @@ export default function SocketEditor({socket}) {
 
     useEffect(() => {
         if (socket) {
-            socket.on("chat message", function (data) {
+            socket.on("chat incoming", function (data) {
                 console.log(data);
                 setUsers(users => [...users, data]);
             });

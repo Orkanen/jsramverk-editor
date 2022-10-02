@@ -1,7 +1,9 @@
 import { useState } from 'react';
-
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import authModel from '../models/auth';
-
+import Container from 'react-bootstrap/Container';
+import "../css/listchat.css";
 
 export default function Login({setToken, setUserEmail}) {
     const [user, setUser] = useState({});
@@ -30,13 +32,31 @@ export default function Login({setToken, setUserEmail}) {
     }
 
     return (
-        <>
-            <h2>Login eller registrera</h2>
-            <input type="email" name="email" onChange={changeHandler} />
-            <input type="password" name="password" onChange={changeHandler} />
+        <div className={"form-border"}>
+            <Container>
+                <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control type="email" name="email"
+                            onChange={changeHandler} placeholder="Enter email" />
+                        <Form.Text className="text-muted">
+                        We'll never share your email with anyone else.
+                        </Form.Text>
+                    </Form.Group>
 
-            <button onClick={register}>Registrera</button>
-            <button onClick={login}>Logga in</button>
-        </>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password" name="password"
+                            onChange={changeHandler} placeholder="Password" />
+                    </Form.Group>
+                    <Button className={"button-margin"} onClick={login} variant="primary">
+                        Login
+                    </Button>
+                    <Button onClick={register} variant="primary">
+                        Register
+                    </Button>
+                </Form>
+            </Container>
+        </div>
     );
 }

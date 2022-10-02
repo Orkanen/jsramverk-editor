@@ -25,11 +25,11 @@ const editorModel = {
 
         return lists.data;
     },
-    saveList: async function saveList(idEdit, textEdit, userEmail) {
+    saveList: async function saveList(idEdit, textEdit, userEmail, titleEdit) {
         //console.log(idEdit, textEdit);
 
         const response = await fetch(`${editorModel.baseUrl}/list/create`, {
-            body: JSON.stringify({text: textEdit, owners: [userEmail]}),
+            body: JSON.stringify({text: textEdit, title: titleEdit, owners: [userEmail]}),
             headers: {
                 'content-type': 'application/json'
             },
