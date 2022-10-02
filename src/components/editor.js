@@ -145,9 +145,9 @@ export default function Editor({lists, submitFunction, socket, email}) {
                     onChange={(e) => setNewUser(e.target.value)}
                 />
                 <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
+                <Button style={{float: 'right'}} variant="info"
+                    onClick={() => addUser(title, newUser)}>Add User</Button>{' '}
             </InputGroup>
-            <Button style={{float: 'right'}} variant="info"
-                onClick={() => addUser(title, newUser)}>Add User</Button>{' '}
         </Container>
     );
 }
