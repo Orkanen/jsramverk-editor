@@ -5,7 +5,7 @@ import editorModel from './models/editor';
 import { io } from "socket.io-client";
 import Login from './components/login.js';
 
-const base = io();
+const base = io('https://jsramverk-editor-fian12.azurewebsites.net');
 
 export default function App() {
     const [list, setList] = useState([]);
