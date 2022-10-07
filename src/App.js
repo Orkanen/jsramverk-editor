@@ -4,6 +4,7 @@ import SocketEditor from './components/socket.js';
 import editorModel from './models/editor';
 import { io } from "socket.io-client";
 import Login from './components/login.js';
+import Admin from './components/admin.js';
 
 const base = io('https://jsramverk-editor-fian12.azurewebsites.net');
 
@@ -44,9 +45,17 @@ export default function App() {
         < div>
             {token ?
                 <>
-                    < Editor lists={list} submitFunction={fetchList} socket={socket}
-                        email={userEmail} />
-                    < SocketEditor socket={socket} />
+                    {setUserEmail != "admin@admin.com" ?
+                        <>
+                            < Admin email={userEmail} token={token} />
+                        </>
+                        :
+                        <>
+                            < Editor lists={list} submitFunction={fetchList} socket={socket}
+                                email={userEmail} />
+                            < SocketEditor socket={socket} />
+                        </>
+                    }
                 </>
                 :
                 <Login setToken={setToken} setUserEmail={setUserEmail} />
