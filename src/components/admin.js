@@ -13,17 +13,7 @@ export default function Admin({email, token}) {
     const [newList, setNewList] = useState(null);
 
     async function getItems(token, query) {
-        console.log(query);
-        let temp = `{
-            users {
-            email
-            fname
-            lname
-            username
-            }
-        }`;
-
-        setNewResult(await adminModel.getAdminUsers(token, temp));
+        setNewResult(await adminModel.getAdminUsers(token, query));
     }
 
     useEffect(() => {
