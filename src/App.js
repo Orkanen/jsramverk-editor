@@ -45,7 +45,7 @@ export default function App() {
         < div>
             {token ?
                 <>
-                    {setUserEmail != "admin@admin.com" ?
+                    {userEmail == "admin@admin.com" ?
                         <>
                             < Admin email={userEmail} token={token} />
                         </>

@@ -18,13 +18,13 @@ export default function Admin({email, token}) {
 
     useEffect(() => {
         if (newResult) {
-            setNewList(newResult.users);
+            setNewList(newResult);
         }
     }, [newResult]);
 
     function List(props) {
+        //console.log(props);
         if (props.data) {
-            //console.log(props.data);
             const sidebar = (
                 <ListGroup>
                     {props.data?.map((user, i) =>
