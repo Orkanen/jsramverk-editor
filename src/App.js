@@ -53,7 +53,7 @@ export default function App() {
                         <>
                             < Editor lists={list} submitFunction={fetchList} socket={socket}
                                 email={userEmail} />
-                            < SocketEditor socket={socket} />
+                            < SocketEditor socket={socket} email={userEmail} />
                         </>
                     }
                 </>

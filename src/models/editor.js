@@ -17,11 +17,13 @@ const editorModel = {
         const response = await fetch(`${editorModel.baseUrl}/list/user`, {
             headers: {
                 "x-access-token": token,
-                "email": email,
+                "email": email.toLowerCase(),
             }
         });
 
         const lists = await response.json();
+
+        //console.log(lists);
 
         return lists.data;
     },

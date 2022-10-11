@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import editorModel from '../models/editor';
@@ -11,6 +11,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
+import PopUp from "./popUp";
 import "../css/listchat.css";
 
 export default function Editor({lists, submitFunction, socket, email}) {
@@ -19,7 +20,9 @@ export default function Editor({lists, submitFunction, socket, email}) {
     const [room, setRoom] = useState('');
     const [newUser, setNewUser] = useState('');
     const [newTitle, setNewTitle] = useState('');
+    //const [newDelta, setNewDelta] = useState('');
     const items = lists;
+    const quill = useRef();
 
     async function saveList(text, id, email, title) {
         await editorModel.saveList(id, text, email, title);
@@ -34,6 +37,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
     }
 
     function List(props) {
+        //console.log(props);
         const sidebar = (
             <DropdownButton id="dropdown-basic-button" title="Documents">
                 <Dropdown.Menu>
@@ -57,9 +61,9 @@ export default function Editor({lists, submitFunction, socket, email}) {
         setValue(items[{number}.number.i].docText);
         setNewTitle(items[{number}.number.i].docTitle);
     }
-
-    function onChangeEffect(e) {
-        //console.log(e);
+    /* eslint-disable */
+    function onChangeEffect(e, delta, source, editor) {
+        //console.log(e, editor.getContents());
         let dataEmit = {
             _id: {title},
             html: e
@@ -70,8 +74,9 @@ export default function Editor({lists, submitFunction, socket, email}) {
             socket.emit("document", dataEmit);
         }
         setValue(e);
+        //setNewDelta(editor.getContents());
     }
-
+    /* eslint-enable */
     useEffect(() => {
         socket.on("document", (data) => {
             setValue(data["html"]);
@@ -117,8 +122,10 @@ export default function Editor({lists, submitFunction, socket, email}) {
                     />
                 </InputGroup>
                 <ReactQuill id="quillEditor" theme="snow"
-                    value={value} onChange={(e) => onChangeEffect(e)}
+                    value={value} onChange={(html, delta, source, editor) =>
+                        onChangeEffect(html, delta, source, editor)}
                     style={{ whiteSpace: 'pre-wrap' }}
+                    ref={quill}
                 />
                 <br/>
                 <Row>
@@ -148,6 +155,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
                 <Button style={{float: 'right'}} variant="info"
                     onClick={() => addUser(title, newUser)}>Add User</Button>{' '}
             </InputGroup>
+            <PopUp title={newTitle} delta={quill} />
         </Container>
     );
 }
