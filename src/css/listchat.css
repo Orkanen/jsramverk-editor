@@ -40,3 +40,13 @@
     border: solid #ccc 1px;
     padding: 1em;
 }
+
+.modal-dialog {
+    max-width: none;
+    width: 75%;
+}
+/*
+.react-pdf__Page__canvas {
+    width: -webkit-fill-available !important;
+}
+*/

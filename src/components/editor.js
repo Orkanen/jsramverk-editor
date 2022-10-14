@@ -133,7 +133,9 @@ export default function Editor({lists, submitFunction, socket, email}) {
                         <List data={lists}/>
                     </Col>
                     <Col sm={8}>
+                        <PopUp title={newTitle} delta={{quill}} style={{float: 'right'}} />
                         <Button style={{float: 'right'}} variant="secondary"
+                            className={"button-margin"}
                             onClick={() =>
                                 updateList(value, title, newTitle)}>Update</Button>{' '}
                         <Button style={{float: 'right'}}
@@ -155,7 +157,6 @@ export default function Editor({lists, submitFunction, socket, email}) {
                 <Button style={{float: 'right'}} variant="info"
                     onClick={() => addUser(title, newUser)}>Add User</Button>{' '}
             </InputGroup>
-            <PopUp title={newTitle} delta={quill} />
         </Container>
     );
 }
