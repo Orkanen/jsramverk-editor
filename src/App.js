@@ -42,7 +42,7 @@ export default function App() {
     }, [token]);
 
     return (
-        < div>
+        <div>
             {token ?
                 <>
                     {userEmail == "admin@admin.com" ?

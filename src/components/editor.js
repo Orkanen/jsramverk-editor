@@ -12,6 +12,8 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import PopUp from "./popUp";
+import Comment from "./comment";
+import ListComments from "./listComments";
 import "../css/listchat.css";
 
 export default function Editor({lists, submitFunction, socket, email}) {
@@ -20,18 +22,21 @@ export default function Editor({lists, submitFunction, socket, email}) {
     const [room, setRoom] = useState('');
     const [newUser, setNewUser] = useState('');
     const [newTitle, setNewTitle] = useState('');
+    const [comments, setComments] = useState([]);
     //const [newDelta, setNewDelta] = useState('');
     const items = lists;
     const quill = useRef();
 
-    async function saveList(text, id, email, title) {
+    async function saveList(text, id, email, title, comments) {
         await editorModel.saveList(id, text, email, title);
+        console.log(comments);
 
         submitFunction();
     }
 
-    async function updateList(text, id, title) {
+    async function updateList(text, id, title, comments) {
         await editorModel.updateList(id, text, title);
+        console.log(comments);
 
         submitFunction();
     }
@@ -60,9 +65,10 @@ export default function Editor({lists, submitFunction, socket, email}) {
         setTitle(items[{number}.number.i]._id);
         setValue(items[{number}.number.i].docText);
         setNewTitle(items[{number}.number.i].docTitle);
+        setComments(items[{number}.number.i].comments);
     }
-    /* eslint-disable */
-    function onChangeEffect(e, delta, source, editor) {
+
+    function onChangeEffect(e) {
         //console.log(e, editor.getContents());
         let dataEmit = {
             _id: {title},
@@ -76,7 +82,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
         setValue(e);
         //setNewDelta(editor.getContents());
     }
-    /* eslint-enable */
+
     useEffect(() => {
         socket.on("document", (data) => {
             setValue(data["html"]);
@@ -103,60 +109,71 @@ export default function Editor({lists, submitFunction, socket, email}) {
     }
 
     return (
-        <Container>
-            <h3>
-                {email}
-                <br/>
-                {/*title*/}
-            </h3>
-            <div className={"form-border"}>
-                <InputGroup className="mb-3">
-                    <InputGroup.Text id="basic-addon1">Title</InputGroup.Text>
-                    <Form.Control
-                        placeholder={value ?
-                            (value.split(">")[1]).split("<")[0]  : "Add Title"}
-                        aria-label="title"
-                        aria-describedby="basic-addon1"
-                        onChange={(e) => setNewTitle(e.target.value)}
-                        value={newTitle}
+        <div className="container-holder">
+            <Container>
+                <h3>
+                    {email}
+                    <br/>
+                    {/*title*/}
+                </h3>
+                <div className={"form-border"}>
+                    <InputGroup className="mb-3">
+                        <InputGroup.Text id="basic-addon1">Title</InputGroup.Text>
+                        <Form.Control
+                            placeholder={value ?
+                                (value.split(">")[1]).split("<")[0]  : "Add Title"}
+                            aria-label="title"
+                            aria-describedby="basic-addon1"
+                            onChange={(e) => setNewTitle(e.target.value)}
+                            value={newTitle}
+                        />
+                    </InputGroup>
+                    <ReactQuill id="quillEditor" theme="snow"
+                        value={value} onChange={(e) =>
+                            onChangeEffect(e)}
+                        style={{ whiteSpace: 'pre-wrap' }}
+                        ref={quill}
                     />
-                </InputGroup>
-                <ReactQuill id="quillEditor" theme="snow"
-                    value={value} onChange={(html, delta, source, editor) =>
-                        onChangeEffect(html, delta, source, editor)}
-                    style={{ whiteSpace: 'pre-wrap' }}
-                    ref={quill}
-                />
+                    <br/>
+                    <Row>
+                        <Col sm={4}>
+                            <List data={lists}/>
+                        </Col>
+                        <Col sm={8}>
+                            <PopUp title={newTitle} delta={{quill}}/>
+                            <Comment editor={{quill}} comments={{comments}}
+                                setComments={setComments} />
+                            <Button style={{float: 'right'}} variant="secondary"
+                                className={"button-margin"}
+                                onClick={() =>
+                                    updateList(value, title, newTitle, comments)}>
+                                        Update
+                            </Button>{' '}
+                            <Button style={{float: 'right'}}
+                                className={"button-margin"}  variant="success"
+                                onClick={() =>
+                                    saveList(value, title, email, newTitle, comments)}>
+                                        Create
+                            </Button>{' '}
+                        </Col>
+                    </Row>
+                </div>
                 <br/>
-                <Row>
-                    <Col sm={4}>
-                        <List data={lists}/>
-                    </Col>
-                    <Col sm={8}>
-                        <PopUp title={newTitle} delta={{quill}} style={{float: 'right'}} />
-                        <Button style={{float: 'right'}} variant="secondary"
-                            className={"button-margin"}
-                            onClick={() =>
-                                updateList(value, title, newTitle)}>Update</Button>{' '}
-                        <Button style={{float: 'right'}}
-                            className={"button-margin"}  variant="success"
-                            onClick={() =>
-                                saveList(value, title, email, newTitle)}>Create</Button>{' '}
-                    </Col>
-                </Row>
+                <InputGroup className="mb-3">
+                    <Form.Control
+                        placeholder="Recipient's email"
+                        aria-label="Recipient's email"
+                        aria-describedby="basic-addon2"
+                        onChange={(e) => setNewUser(e.target.value)}
+                    />
+                    <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
+                    <Button style={{float: 'right'}} variant="info"
+                        onClick={() => addUser(title, newUser)}>Add User</Button>{' '}
+                </InputGroup>
+            </Container>
+            <div className="comment-list">
+                <ListComments editor={{quill}} comments={{comments}} />
             </div>
-            <br/>
-            <InputGroup className="mb-3">
-                <Form.Control
-                    placeholder="Recipient's email"
-                    aria-label="Recipient's email"
-                    aria-describedby="basic-addon2"
-                    onChange={(e) => setNewUser(e.target.value)}
-                />
-                <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
-                <Button style={{float: 'right'}} variant="info"
-                    onClick={() => addUser(title, newUser)}>Add User</Button>{' '}
-            </InputGroup>
-        </Container>
+        </div>
     );
 }

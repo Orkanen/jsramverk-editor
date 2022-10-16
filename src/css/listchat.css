@@ -45,6 +45,11 @@
     max-width: none;
     width: 75%;
 }
+
+.container-holder {
+    display: flex;
+}
+
 /*
 .react-pdf__Page__canvas {
     width: -webkit-fill-available !important;

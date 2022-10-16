@@ -21,7 +21,7 @@ export default function PopUp({title, delta}) {
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
+            <Button variant="primary" style={{float: 'right'}} onClick={handleShow}>
                 PDF-Viewer
             </Button>
 
