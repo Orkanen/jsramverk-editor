@@ -28,15 +28,13 @@ export default function Editor({lists, submitFunction, socket, email}) {
     const quill = useRef();
 
     async function saveList(text, id, email, title, comments) {
-        await editorModel.saveList(id, text, email, title);
-        console.log(comments);
+        await editorModel.saveList(id, text, email, title, comments);
 
         submitFunction();
     }
 
     async function updateList(text, id, title, comments) {
-        await editorModel.updateList(id, text, title);
-        console.log(comments);
+        await editorModel.updateList(id, text, title, comments);
 
         submitFunction();
     }
@@ -59,6 +57,10 @@ export default function Editor({lists, submitFunction, socket, email}) {
         return (
             <div>{sidebar}</div>
         );
+    }
+
+    async function updateArray(array) {
+        setComments(array);
     }
 
     async function fetchItem(number) {
@@ -172,7 +174,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
                 </InputGroup>
             </Container>
             <div className="comment-list">
-                <ListComments editor={{quill}} comments={{comments}} />
+                <ListComments editor={{quill}} comments={comments} setArray={updateArray} />
             </div>
         </div>
     );
