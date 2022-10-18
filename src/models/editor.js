@@ -65,9 +65,9 @@ const editorModel = {
 
         console.log(result);
     },
-    addOwner: async function addOwner(idEdit, newOwner) {
+    addOwner: async function addOwner(idEdit, newOwner, sender) {
         const response = await fetch(`${editorModel.baseUrl}/list/addOwner`, {
-            body: JSON.stringify({id: idEdit, owner: newOwner}),
+            body: JSON.stringify({id: idEdit, owner: newOwner, email: sender}),
             headers: {
                 'content-type': 'application/json'
             },

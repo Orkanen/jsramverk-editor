@@ -101,10 +101,10 @@ export default function Editor({lists, submitFunction, socket, email}) {
         }
     }
 
-    async function addUser(id, value) {
+    async function addUser(id, value, email) {
         if (value && id) {
             console.log(id, " + ", value);
-            await editorModel.addOwner(id, value);
+            await editorModel.addOwner(id, value, email);
 
             submitFunction();
         }
@@ -170,7 +170,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
                     />
                     <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
                     <Button style={{float: 'right'}} variant="info"
-                        onClick={() => addUser(title, newUser)}>Add User</Button>{' '}
+                        onClick={() => addUser(title, newUser, email)}>Add User</Button>{' '}
                 </InputGroup>
             </Container>
             <div className="comment-list">
