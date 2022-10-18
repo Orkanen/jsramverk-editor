@@ -103,7 +103,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
 
     async function addUser(id, value, email) {
         if (value && id) {
-            console.log(id, " + ", value);
+            //console.log(id, " + ", value);
             await editorModel.addOwner(id, value, email);
 
             submitFunction();
