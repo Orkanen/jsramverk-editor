@@ -32,7 +32,7 @@ export default function ListComment({item, comment, index1, index2, quill, remov
                 onMouseLeave={() => newEditor.formatText(index1, index2, "background", "yellow")}>
                 {comment}
             </ListGroup.Item>
-            <Button onClick={() => rmvComment(item, index1, index2)}>
+            <Button variant="outline-danger" onClick={() => rmvComment(item, index1, index2)}>
                 Delete
             </Button>
         </ListGroup>

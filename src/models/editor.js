@@ -27,7 +27,7 @@ const editorModel = {
 
         return lists.data;
     },
-    saveList: async function saveList(idEdit, textEdit, userEmail, titleEdit, comments) {
+    saveList: async function saveList(idEdit, textEdit, userEmail, titleEdit, comments, codeEdit) {
         //console.log(idEdit, textEdit);
 
         const response = await fetch(`${editorModel.baseUrl}/list/create`, {
@@ -35,7 +35,8 @@ const editorModel = {
                 text: textEdit,
                 title: titleEdit,
                 owners: [userEmail],
-                comments: comments
+                comments: comments,
+                code: codeEdit
             }),
             headers: {
                 'content-type': 'application/json'
@@ -47,13 +48,14 @@ const editorModel = {
 
         console.log(result);
     },
-    updateList: async function updateList(idEdit, textEdit, titleEdit, commentsEdit) {
+    updateList: async function updateList(idEdit, textEdit, titleEdit, commentsEdit, codeEdit) {
         const response = await fetch(`${editorModel.baseUrl}/list/update`, {
             body: JSON.stringify({
                 id: idEdit,
                 text: textEdit,
                 title: titleEdit,
-                comments: commentsEdit
+                comments: commentsEdit,
+                code: codeEdit
             }),
             headers: {
                 'content-type': 'application/json'

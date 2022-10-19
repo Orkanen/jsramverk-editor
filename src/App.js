@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Editor from './components/editor.js';
-import SocketEditor from './components/socket.js';
+//import SocketEditor from './components/socket.js';
 import editorModel from './models/editor';
 import { io } from "socket.io-client";
 import Login from './components/login.js';
@@ -53,7 +53,9 @@ export default function App() {
                         <>
                             < Editor lists={list} submitFunction={fetchList} socket={socket}
                                 email={userEmail} />
-                            < SocketEditor socket={socket} email={userEmail} />
+                            {/*
+                                < SocketEditor socket={socket} email={userEmail} />
+                            */}
                         </>
                     }
                 </>

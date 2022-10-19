@@ -86,7 +86,8 @@ export default function Comment({editor, comments, setComments}) {
                     </InputGroup>
                 </Modal.Body>
             </Modal>
-            <Button onClick={handleShow} className={"button-margin"} style={{float: 'right'}}>
+            <Button variant="outline-primary" onClick={handleShow}
+                className={"button-margin"} style={{float: 'right'}}>
                 Comment
             </Button>
         </>

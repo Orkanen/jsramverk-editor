@@ -14,27 +14,31 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import PopUp from "./popUp";
 import Comment from "./comment";
 import ListComments from "./listComments";
+import CodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import {Buffer} from 'buffer';
 import "../css/listchat.css";
 
 export default function Editor({lists, submitFunction, socket, email}) {
-    const [title, setTitle] = useState('');
+    const [title, setTitle] = useState('New Title');
     const [value, setValue] = useState('');
     const [room, setRoom] = useState('');
     const [newUser, setNewUser] = useState('');
     const [newTitle, setNewTitle] = useState('');
     const [comments, setComments] = useState([]);
+    const [codeMode, setCodeMode] = useState(false);
     //const [newDelta, setNewDelta] = useState('');
     const items = lists;
     const quill = useRef();
 
-    async function saveList(text, id, email, title, comments) {
-        await editorModel.saveList(id, text, email, title, comments);
+    async function saveList(text, id, email, title, comments, code) {
+        await editorModel.saveList(id, text, email, title, comments, code);
 
         submitFunction();
     }
 
-    async function updateList(text, id, title, comments) {
-        await editorModel.updateList(id, text, title, comments);
+    async function updateList(text, id, title, comments, code) {
+        await editorModel.updateList(id, text, title, comments, code);
 
         submitFunction();
     }
@@ -68,6 +72,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
         setValue(items[{number}.number.i].docText);
         setNewTitle(items[{number}.number.i].docTitle);
         setComments(items[{number}.number.i].comments);
+        setCodeMode(items[{number}.number.i].code);
     }
 
     function onChangeEffect(e) {
@@ -110,6 +115,25 @@ export default function Editor({lists, submitFunction, socket, email}) {
         }
     }
 
+    function titleSplitter(title) {
+        var temp = "Add Title";
+
+        try {
+            if (!codeMode) {
+                temp = title ? (title.split(">")[1]).split("<")[0]  : "Add Title";
+            }
+        } catch {
+            //console.log("Title could not be split");
+        }
+        return temp;
+    }
+
+    function codeToBase64(value) {
+        const encodedString = Buffer.from(value).toString('base64');
+
+        return encodedString;
+    }
+
     return (
         <div className="container-holder">
             <Container>
@@ -122,44 +146,71 @@ export default function Editor({lists, submitFunction, socket, email}) {
                     <InputGroup className="mb-3">
                         <InputGroup.Text id="basic-addon1">Title</InputGroup.Text>
                         <Form.Control
-                            placeholder={value ?
-                                (value.split(">")[1]).split("<")[0]  : "Add Title"}
+                            placeholder={titleSplitter(value)}
                             aria-label="title"
                             aria-describedby="basic-addon1"
                             onChange={(e) => setNewTitle(e.target.value)}
                             value={newTitle}
                         />
                     </InputGroup>
-                    <ReactQuill id="quillEditor" theme="snow"
-                        value={value} onChange={(e) =>
-                            onChangeEffect(e)}
-                        style={{ whiteSpace: 'pre-wrap' }}
-                        ref={quill}
-                    />
+                    {codeMode ?
+                        <CodeMirror
+                            value={value}
+                            onChange={(e) => onChangeEffect(e)}
+                            height="200px"
+                            extensions={[javascript({ jsx: true })]}
+                        />
+                        :
+                        <ReactQuill id="quillEditor" theme="snow"
+                            value={value} onChange={(e) =>
+                                onChangeEffect(e)}
+                            style={{ whiteSpace: 'pre-wrap' }}
+                            ref={quill}
+                        />
+                    }
                     <br/>
                     <Row>
                         <Col sm={4}>
                             <List data={lists}/>
                         </Col>
                         <Col sm={8}>
-                            <PopUp title={newTitle} delta={{quill}}/>
-                            <Comment editor={{quill}} comments={{comments}}
-                                setComments={setComments} />
-                            <Button style={{float: 'right'}} variant="secondary"
+                            {codeMode ?
+                                <>
+                                    <Button style={{float: 'right'}} variant="outline-primary"
+                                        className={"button-margin"}
+                                        onClick={() =>
+                                            console.log(codeToBase64(value))}>
+                                                Execute
+                                    </Button>{' '}
+                                </>
+                                :
+                                <>
+                                    <PopUp title={newTitle} delta={{quill}}/>
+                                    <Comment editor={{quill}} comments={{comments}}
+                                        setComments={setComments} />
+                                </>
+                            }
+                            <Button style={{float: 'right'}} variant="outline-success"
                                 className={"button-margin"}
                                 onClick={() =>
-                                    updateList(value, title, newTitle, comments)}>
+                                    updateList(value, title, newTitle, comments, codeMode)}>
                                         Update
                             </Button>{' '}
                             <Button style={{float: 'right'}}
                                 className={"button-margin"}  variant="success"
                                 onClick={() =>
-                                    saveList(value, title, email, newTitle, comments)}>
+                                    saveList(value, title, email, newTitle, comments, codeMode)}>
                                         Create
+                            </Button>{' '}
+                            <Button style={{float: 'right'}}
+                                className={"button-margin"}  variant="warning"
+                                onClick={() => setCodeMode(!codeMode)}>
+                                {codeMode ? "Editor-mode" : "Code-mode"}
                             </Button>{' '}
                         </Col>
                     </Row>
                 </div>
+
                 <br/>
                 <InputGroup className="mb-3">
                     <Form.Control
