@@ -17,6 +17,7 @@ import ListComments from "./listComments";
 import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import {Buffer} from 'buffer';
+import Alert from 'react-bootstrap/Alert';
 import "../css/listchat.css";
 
 export default function Editor({lists, submitFunction, socket, email}) {
@@ -27,6 +28,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
     const [newTitle, setNewTitle] = useState('');
     const [comments, setComments] = useState([]);
     const [codeMode, setCodeMode] = useState(false);
+    const [base64, setBase64] = useState('');
     //const [newDelta, setNewDelta] = useState('');
     const items = lists;
     const quill = useRef();
@@ -73,6 +75,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
         setNewTitle(items[{number}.number.i].docTitle);
         setComments(items[{number}.number.i].comments);
         setCodeMode(items[{number}.number.i].code);
+        setBase64('');
     }
 
     function onChangeEffect(e) {
@@ -128,10 +131,27 @@ export default function Editor({lists, submitFunction, socket, email}) {
         return temp;
     }
 
-    function codeToBase64(value) {
-        const encodedString = Buffer.from(value).toString('base64');
+    async function codeToBase64(value) {
+        var encodedString = Buffer.from(value).toString('base64');
+        var data = {
+            code: encodedString
+        };
+        var tempCheck = await editorModel.base64Code(data);
+        var tempSuccess = (
+            <Alert variant="danger">
+                Command Failed
+            </Alert>
+        );
 
-        return encodedString;
+        if (!tempCheck.includes("failed")) {
+            tempSuccess = (
+                <Alert variant="success">
+                    {tempCheck}
+                </Alert>
+            );
+        }
+
+        setBase64(tempSuccess);
     }
 
     return (
@@ -169,6 +189,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
                         />
                     }
                     <br/>
+                    {base64}
                     <Row>
                         <Col sm={4}>
                             <List data={lists}/>
@@ -179,7 +200,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
                                     <Button style={{float: 'right'}} variant="outline-primary"
                                         className={"button-margin"}
                                         onClick={() =>
-                                            console.log(codeToBase64(value))}>
+                                            codeToBase64(value)}>
                                                 Execute
                                     </Button>{' '}
                                 </>

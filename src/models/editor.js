@@ -1,3 +1,5 @@
+import {Buffer} from 'buffer';
+
 const editorModel = {
     baseUrl: window.location.href.includes("localhost") ?
         "http://localhost:1337" :
@@ -79,6 +81,27 @@ const editorModel = {
         const result = await response.json();
 
         console.log(result);
+    },
+    base64Code: async function base64Code(data) {
+        const response = await fetch("https://execjs.emilfolino.se/code", {
+            body: JSON.stringify(data),
+            headers: {
+                'content-type': 'application/json'
+            },
+            method: 'POST'
+        })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(result) {
+                let decodedOutput = Buffer.from(result.data, 'base64').toString('utf-8');
+
+                return decodedOutput;
+            });
+
+        const result = await response;
+
+        return result;
     }
 };
 
