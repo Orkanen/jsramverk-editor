@@ -8,7 +8,7 @@ export default function ListComment({item, comment, index1, index2, quill, remov
 
     useEffect(() => {
         if (newEditor) {
-            newEditor.formatText(index1, index2, "background", "yellow");
+            newEditor.formatText(index1, index2, "background", "#ffba32");
         }
     }, [newEditor]);
 
@@ -28,8 +28,8 @@ export default function ListComment({item, comment, index1, index2, quill, remov
     return (
         <ListGroup className="" key={`${item}+group`} style={{display: "flex"}}>
             <ListGroup.Item key={`${item}+comment`}
-                onMouseEnter={() => newEditor.formatText(index1, index2, "background", "red")}
-                onMouseLeave={() => newEditor.formatText(index1, index2, "background", "yellow")}>
+                onMouseEnter={() => newEditor.formatText(index1, index2, "background", "#fc4b5c")}
+                onMouseLeave={() => newEditor.formatText(index1, index2, "background", "#ffba32")}>
                 {comment}
             </ListGroup.Item>
             <Button variant="outline-danger" onClick={() => rmvComment(item, index1, index2)}>

@@ -29,6 +29,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
     const [comments, setComments] = useState([]);
     const [codeMode, setCodeMode] = useState(false);
     const [base64, setBase64] = useState('');
+    const [checkSaved, setCheckSaved] = useState(true);
     //const [newDelta, setNewDelta] = useState('');
     const items = lists;
     const quill = useRef();
@@ -38,6 +39,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
 
         if (Object.keys(tempCheck).length == 1) {
             alertBox(true, `Document Added: ${tempCheck.data.docTitle}`);
+            setCheckSaved(true);
         } else {
             alertBox(false, "Failed to add document.");
         }
@@ -49,13 +51,12 @@ export default function Editor({lists, submitFunction, socket, email}) {
 
         if (Object.keys(tempCheck).length == 1) {
             alertBox(true, `Document Updated: ${tempCheck.data.docTitle}`);
+            setCheckSaved(true);
         } else {
             alertBox(false, "Failed to update document.");
         }
         submitFunction();
     }
-
-
 
     function List(props) {
         //console.log(props);
@@ -88,6 +89,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
         setComments(items[{number}.number.i].comments);
         setCodeMode(items[{number}.number.i].code);
         setBase64('');
+        setCheckSaved(true);
     }
 
     function onChangeEffect(e) {
@@ -102,6 +104,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
             socket.emit("document", dataEmit);
         }
         setValue(e);
+        setCheckSaved(false);
         //setNewDelta(editor.getContents());
     }
 
@@ -182,16 +185,26 @@ export default function Editor({lists, submitFunction, socket, email}) {
                     {/*title*/}
                 </h3>
                 <div className={"form-border"}>
-                    <InputGroup className="mb-3">
-                        <InputGroup.Text id="basic-addon1">Title</InputGroup.Text>
-                        <Form.Control
-                            placeholder={titleSplitter(value)}
-                            aria-label="title"
-                            aria-describedby="basic-addon1"
-                            onChange={(e) => setNewTitle(e.target.value)}
-                            value={newTitle}
-                        />
-                    </InputGroup>
+                    <div className={"title-holder"}>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text id="basic-addon1">Title</InputGroup.Text>
+                            <Form.Control
+                                placeholder={titleSplitter(value)}
+                                aria-label="title"
+                                aria-describedby="basic-addon1"
+                                onChange={(e) => {
+                                    setNewTitle(e.target.value),
+                                    setCheckSaved(false);
+                                }}
+                                value={newTitle}
+                            />
+                        </InputGroup>
+                        <div className={`edited-doc-${checkSaved}`}>
+                            <span className={"tooltiptext"}>
+                                {checkSaved ? "Document saved." : "Document changes unsaved."}
+                            </span>
+                        </div>
+                    </div>
                     {codeMode ?
                         <CodeMirror
                             value={value}
@@ -260,7 +273,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
                         onChange={(e) => setNewUser(e.target.value)}
                     />
                     <InputGroup.Text id="basic-addon2">@example.com</InputGroup.Text>
-                    <Button style={{float: 'right'}} variant="info"
+                    <Button style={{float: 'right'}} variant="outline-info"
                         onClick={() => addUser(title, newUser, email)}>Add User</Button>{' '}
                 </InputGroup>
             </Container>

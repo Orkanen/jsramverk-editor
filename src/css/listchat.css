@@ -50,6 +50,70 @@
     display: flex;
 }
 
+.edited-doc-true {
+    background-color: #146c43;
+    height: 1em;
+    width: 1em;
+    border-radius: 50%;
+    margin-top: 0.75em;
+    margin-left: 1em;
+}
+
+.edited-doc-false {
+    background-color: #dc3545;
+    height: 1em;
+    width: 1em;
+    border-radius: 50%;
+    margin-top: 0.75em;
+    margin-left: 1em;
+}
+
+.edited-doc-true .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 10;
+    right: 5em;
+}
+
+.edited-doc-true:hover .tooltiptext {
+visibility: visible;
+}
+
+.edited-doc-false .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 10;
+    right: 5em;
+}
+
+.edited-doc-false:hover .tooltiptext {
+visibility: visible;
+}
+
+.title-holder {
+    display: flex;
+}
+
+.comment-list {
+    padding-top: 2.6em;
+    margin-right: 1em;
+}
 /*
 .react-pdf__Page__canvas {
     width: -webkit-fill-available !important;
