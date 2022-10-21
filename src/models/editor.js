@@ -48,7 +48,7 @@ const editorModel = {
 
         const result = await response.json();
 
-        console.log(result);
+        return result;
     },
     updateList: async function updateList(idEdit, textEdit, titleEdit, commentsEdit, codeEdit) {
         const response = await fetch(`${editorModel.baseUrl}/list/update`, {
@@ -67,7 +67,7 @@ const editorModel = {
 
         const result = await response.json();
 
-        console.log(result);
+        return result;
     },
     addOwner: async function addOwner(idEdit, newOwner, sender) {
         const response = await fetch(`${editorModel.baseUrl}/list/addOwner`, {
@@ -80,7 +80,7 @@ const editorModel = {
 
         const result = await response.json();
 
-        console.log(result);
+        return result;
     },
     base64Code: async function base64Code(data) {
         const response = await fetch("https://execjs.emilfolino.se/code", {

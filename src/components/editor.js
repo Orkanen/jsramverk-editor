@@ -34,16 +34,28 @@ export default function Editor({lists, submitFunction, socket, email}) {
     const quill = useRef();
 
     async function saveList(text, id, email, title, comments, code) {
-        await editorModel.saveList(id, text, email, title, comments, code);
+        var tempCheck = await editorModel.saveList(id, text, email, title, comments, code);
 
+        if (Object.keys(tempCheck).length == 1) {
+            alertBox(true, `Document Added: ${tempCheck.data.docTitle}`);
+        } else {
+            alertBox(false, "Failed to add document.");
+        }
         submitFunction();
     }
 
     async function updateList(text, id, title, comments, code) {
-        await editorModel.updateList(id, text, title, comments, code);
+        var tempCheck = await editorModel.updateList(id, text, title, comments, code);
 
+        if (Object.keys(tempCheck).length == 1) {
+            alertBox(true, `Document Updated: ${tempCheck.data.docTitle}`);
+        } else {
+            alertBox(false, "Failed to update document.");
+        }
         submitFunction();
     }
+
+
 
     function List(props) {
         //console.log(props);
@@ -111,8 +123,14 @@ export default function Editor({lists, submitFunction, socket, email}) {
 
     async function addUser(id, value, email) {
         if (value && id) {
-            //console.log(id, " + ", value);
-            await editorModel.addOwner(id, value, email);
+            var tempCheck = await editorModel.addOwner(id, value, email);
+
+            //console.log(Object.keys(tempCheck.data).length);
+            if (Object.keys(tempCheck.data).length == 2) {
+                alertBox(true, tempCheck.data.resultCompare);
+            } else {
+                alertBox(false, tempCheck.data);
+            }
 
             submitFunction();
         }
@@ -137,21 +155,22 @@ export default function Editor({lists, submitFunction, socket, email}) {
             code: encodedString
         };
         var tempCheck = await editorModel.base64Code(data);
-        var tempSuccess = (
-            <Alert variant="danger">
-                Command Failed
+
+        if (!tempCheck.includes("failed")) {
+            alertBox(true, tempCheck);
+        } else {
+            alertBox(false, "Command Failed");
+        }
+    }
+
+    function alertBox(success, value) {
+        let sBox = (
+            <Alert variant={success ? "success" : "danger"}>
+                {value}
             </Alert>
         );
 
-        if (!tempCheck.includes("failed")) {
-            tempSuccess = (
-                <Alert variant="success">
-                    {tempCheck}
-                </Alert>
-            );
-        }
-
-        setBase64(tempSuccess);
+        setBase64(sBox);
     }
 
     return (

@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import authModel from '../models/auth';
 import Container from 'react-bootstrap/Container';
 import "../css/listchat.css";
 
 export default function Login({setToken, setUserEmail}) {
     const [user, setUser] = useState({});
+    const [newAlert, setNewAlert] = useState('');
 
     function changeHandler(event) {
         let newObject = {};
@@ -17,7 +19,13 @@ export default function Login({setToken, setUserEmail}) {
     }
 
     async function register() {
-        await authModel.register(user);
+        let result = await authModel.register(user);
+
+        if (result.data.message == "User successfully created.") {
+            alertBox(true, result.data.message);
+        } else {
+            alertBox(false, result.data.message);
+        }
     }
 
     async function login() {
@@ -29,6 +37,16 @@ export default function Login({setToken, setUserEmail}) {
             setToken(loginResult.data.token);
             setUserEmail(loginResult.data.email);
         }
+    }
+
+    function alertBox(success, value) {
+        let sBox = (
+            <Alert variant={success ? "success" : "danger"}>
+                {value}
+            </Alert>
+        );
+
+        setNewAlert(sBox);
     }
 
     return (
@@ -56,6 +74,8 @@ export default function Login({setToken, setUserEmail}) {
                         Register
                     </Button>
                 </Form>
+                <br/>
+                {newAlert}
             </Container>
         </div>
     );
