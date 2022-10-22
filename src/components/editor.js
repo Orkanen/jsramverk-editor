@@ -59,7 +59,6 @@ export default function Editor({lists, submitFunction, socket, email}) {
     }
 
     function List(props) {
-        //console.log(props);
         const sidebar = (
             <DropdownButton id="dropdown-basic-button" title="Documents">
                 <Dropdown.Menu>
@@ -83,6 +82,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
     }
 
     async function fetchItem(number) {
+        submitFunction();
         setTitle(items[{number}.number.i]._id);
         setValue(items[{number}.number.i].docText);
         setNewTitle(items[{number}.number.i].docTitle);
@@ -278,7 +278,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
                 </InputGroup>
             </Container>
             <div className="comment-list">
-                <ListComments editor={{quill}} comments={comments} setArray={updateArray} />
+                <ListComments editor={{quill}} comments={{comments}} setArray={updateArray} />
             </div>
         </div>
     );
