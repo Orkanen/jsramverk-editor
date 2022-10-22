@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import "../css/listchat.css";
 
-export default function Comment({editor, comments, setComments}) {
+export default function Comment({editor, comments, setArray}) {
     const [show, setShow] = useState(false);
     const [currentSelection, setCurrentSelection] = useState('');
     const [currentIndex, setCurrentIndex] = useState('');
@@ -56,11 +56,11 @@ export default function Comment({editor, comments, setComments}) {
 
                 if (temp) {
                     temp.push({comment: comment, index: index});
-                    editor.format("background", "yellow");
+                    editor.format("background", "#ffba32");
                     handleClose();
                 } else {
-                    setComments([{comment: comment, index: index}]);
-                    editor.format("background", "yellow");
+                    setArray([{comment: comment, index: index}]);
+                    editor.format("background", "#ffba32");
                     handleClose();
                 }
             }

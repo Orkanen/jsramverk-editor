@@ -8,7 +8,7 @@ export default function ListComment({item, comment, index1, index2, quill, remov
         <ListGroup className="" key={`${item}+group`} style={{display: "flex"}}>
             <ListGroup.Item key={`${item}+comment`}
                 onMouseEnter={() =>
-                    quill.quill.current.editor.formatText(index1, index2, "background", "red")}
+                    quill.quill.current.editor.formatText(index1, index2, "background", "#fc4b5c")}
                 onMouseLeave={() =>
                     quill.quill.current.editor.formatText(index1, index2, "background", "#ffba32")}>
                 {comment}
