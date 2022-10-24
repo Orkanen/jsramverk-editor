@@ -15,7 +15,7 @@ async function pdfMaker(givenDelta) {
     }
 }
 
-export default function PdfViwer({deltaPdf, title}) {
+export default function PdfViewer({deltaPdf, title}) {
     const [numPages, setNumPages] = useState(null);
     const [newBase64, setNewBase64] = useState(null);
 

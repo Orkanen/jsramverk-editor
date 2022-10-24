@@ -210,6 +210,7 @@ export default function Editor({lists, submitFunction, socket, email}) {
                             value={value}
                             onChange={(e) => onChangeEffect(e)}
                             height="200px"
+                            aria-label="Code-Editor"
                             extensions={[javascript({ jsx: true })]}
                         />
                         :
